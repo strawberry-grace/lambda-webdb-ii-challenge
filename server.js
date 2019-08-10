@@ -40,4 +40,33 @@ server.post('/', async (req, res) => {
     }
 });
 
+server.put('/:id', async (req, res) => {
+    const { id } = req.params;
+    const carData = req.body;
+    try {
+        const count = await db('cars').where({ id }).update(carData);
+        if (count) {
+            res.status(200).json({ updated: count });
+        } else {
+            res.status(404).json({ message: 'Couldn\'t find the car with this ID' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: 'Oops. Internal server error', error });
+    }
+});
+
+server.delete('/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+        const count = await db('accounts').where({ id }).del();
+        if (count) {
+            res.status(200).json({ deleted: count });
+        } else {
+            res.status(404).json({ message: 'Couldn\'t find the post with this ID' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: 'Oops. Internal server error', error });
+    }
+});
+
 module.exports = server;
