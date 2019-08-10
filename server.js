@@ -6,7 +6,9 @@ const server = express();
 
 server.use(express.json());
 
-server.get('/', async (req, res) => {
+// FOR CARS
+
+server.get('/cars', async (req, res) => {
     try {
         const cars = await db('cars');
         res.status(200).json(cars);
@@ -15,7 +17,7 @@ server.get('/', async (req, res) => {
     }
 });
 
-server.get('/:id', async (req, res) => {
+server.get('/cars/:id', async (req, res) => {
     const { id } = req.params;
     try {
         const car = await db('cars').where({ id });
@@ -29,7 +31,7 @@ server.get('/:id', async (req, res) => {
     }
 });
 
-server.post('/', async (req, res) => {
+server.post('/cars', async (req, res) => {
     const carData = req.body;
     try {
         const [ newCarId ] = await db('cars').insert(carData);
@@ -40,7 +42,7 @@ server.post('/', async (req, res) => {
     }
 });
 
-server.put('/:id', async (req, res) => {
+server.put('/cars/:id', async (req, res) => {
     const { id } = req.params;
     const carData = req.body;
     try {
@@ -55,7 +57,7 @@ server.put('/:id', async (req, res) => {
     }
 });
 
-server.delete('/:id', async (req, res) => {
+server.delete('/cars/:id', async (req, res) => {
     const { id } = req.params;
     try {
         const count = await db('accounts').where({ id }).del();
@@ -64,6 +66,17 @@ server.delete('/:id', async (req, res) => {
         } else {
             res.status(404).json({ message: 'Couldn\'t find the post with this ID' });
         }
+    } catch (error) {
+        res.status(500).json({ message: 'Oops. Internal server error', error });
+    }
+});
+
+// FOR SALES
+
+server.get('/sales', async (req, res) => {
+    try {
+        const sales = await db('sales');
+        res.status(200).json(sales);
     } catch (error) {
         res.status(500).json({ message: 'Oops. Internal server error', error });
     }
